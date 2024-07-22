@@ -1,5 +1,5 @@
 # GET WEATHER FOR DIFFERENT CITIES
-## PROJCT OVERVIEW
+## PROJECT OVERVIEW
 This project is a Flask-based weather application that retrieves and displays weather information for a user-specified city.  
 I used the Geopy library for geocoding and the Open-Meteo API for weather data.
 
