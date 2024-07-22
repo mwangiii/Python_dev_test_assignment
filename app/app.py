@@ -5,7 +5,7 @@ from geopy.geocoders import Nominatim
 
 app = Flask(__name__, template_folder='../templates')
 
-geolocator = Nominatim(user_agent="your_app_name_here")
+geolocator = Nominatim(user_agent="weather_app_1-0")
 city_visit_counts = {}
 
 
