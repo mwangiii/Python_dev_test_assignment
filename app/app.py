@@ -1,31 +1,58 @@
-# app/app.py
-
+""" This is the entry point of the Flask application."""
 from flask import Flask, render_template, request
 import requests
+from geopy.geocoders import Nominatim
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../templates')
 
-# Replace with your API key if needed
-# API_URL = "https://api.open-meteo.com/v1/forecast"
+geolocator = Nominatim(user_agent="your_app_name_here")
+city_visit_counts = {}
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    return render_template('app.html')
-# def index():
-#     forecast = None
-#     if request.method == 'POST':
-#         city = request.form.get('city')
-#         # Here you would have logic to get weather data
-#         # For simplicity, let's assume we use the Open Meteo API
-#         params = {
-#             'latitude': '52.52',  # Default to Berlin; replace with actual coordinates
-#             'longitude': '13.4050',
-#             'hourly': 'temperature_2m'
-#         }
-#         response = requests.get(API_URL, params=params)
-#         data = response.json()
-#         forecast = data['hourly']['temperature_2m']  # Simplified example
-#     return render_template('app.html', forecast=forecast)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+
+@app.route('/weather')
+def weather():
+    city = request.args.get('city')
+    if city:
+        try:
+            location = geolocator.geocode(city)
+            if not location:
+                return "City not found", 404
+
+            latitude = location.latitude
+            longitude = location.longitude
+
+            weather_url = f'https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true'
+            weather_response = requests.get(weather_url)
+            weather_data = weather_response.json()
+
+            if 'current_weather' not in weather_data:
+                return "Weather data not available", 500
+
+            current_weather = weather_data['current_weather']
+
+            if city in city_visit_counts:
+                city_visit_counts[city] += 1
+            else:
+                city_visit_counts[city] = 1
+
+            visit_count = city_visit_counts[city]
+
+            return render_template('weather.html', city=city, weather={
+                'temperature': current_weather['temperature'],
+                'windspeed': current_weather['windspeed'],
+                'visit_count': visit_count
+            })
+        except Exception as e:
+            return str(e), 500
+
+    return "City not provided", 400
+
+
+@app.route('/visits')
+def visit_counts():
+    return render_template('visit_counts.html', visit_counts=city_visit_counts)

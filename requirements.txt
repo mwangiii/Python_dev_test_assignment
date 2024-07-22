@@ -1,2 +1,4 @@
-Flask
-requests
+Flask==2.0.2
+requests==2.26.0
+geopy==2.2.0
+Werkzeug==2.0.2

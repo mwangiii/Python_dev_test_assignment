@@ -9,7 +9,6 @@ Create a web application (website) where a user enters the name of a city and re
 - Weather API: *https://open-meteo.com/* (or another one if you prefer).
 
 It would be a plus if:
-
 - Tests are written.
 - Everything is placed in a Docker container.
 - Autocompletion (suggestions) is provided when entering a city.

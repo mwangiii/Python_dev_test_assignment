@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Visit Counts</title>
+</head>
+<body>
+    <h1>City Visit Counts</h1>
+    <ul>
+        {% for city, count in visit_counts.items() %}
+            <li>{{ city }}: {{ count }} visits</li>
+        {% endfor %}
+    </ul>
+    <a href="/">Go back</a>
+</body>
+</html>
